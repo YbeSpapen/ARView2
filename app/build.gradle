@@ -32,20 +32,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     api project(path: ':arview2')
 }
-
+//
 apply plugin: 'com.google.ar.sceneform.plugin'
-
-sceneform.asset('sampledata/arrow/arrow.obj',
-        'default',
-        'sampledata/arrow/arrow.sfa',
-        'src/main/assets/arrow')
-
-sceneform.asset('sampledata/sign/sign.obj',
-        'default',
-        'sampledata/sign/sign.sfa',
-        'src/main/assets/sign')
-
-sceneform.asset('sampledata/balloon/Hot air balloon.obj',
-        'default',
-        'sampledata/balloon/Hot air balloon.sfa',
-        'src/main/assets/balloon')

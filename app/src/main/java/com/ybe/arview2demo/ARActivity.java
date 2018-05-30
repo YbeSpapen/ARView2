@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-import com.google.ar.sceneform.math.Vector3;
 import com.ybe.arview2.ARScene;
+import com.ybe.arview2.DefaultConfig;
+import com.ybe.arview2.models.Animation;
 import com.ybe.arview2.models.Sign;
+import com.ybe.arview2.models.SignText;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ARActivity extends AppCompatActivity {
 
@@ -20,12 +23,16 @@ public class ARActivity extends AppCompatActivity {
 
         Location location = getIntent().getParcelableExtra("location");
 
-        ArrayList<Sign> signs = new ArrayList<>();
-        signs.add(new Sign("Wegwijzer", "sign.sfb", "sign", new Vector3(0.40f, 0.40f, 0.40f), true));
-        signs.add(new Sign("Wegwijzer groot", "sign.sfb", "sign", new Vector3(0.60f, 0.60f, 0.60f), true));
+        Animation animation = DefaultConfig.getDefaultAnimation();
+        SignText text = DefaultConfig.getDefaultText();
+        ArrayList<Sign> signs = DefaultConfig.getDefaultSignList();
+
+        //Set animation and text on sign small
+        signs.get(0).setAnimation(animation);
+        signs.get(0).setSignText(text);
 
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("itemList", signs);
+        bundle.putParcelableArrayList("signs", signs);
         bundle.putParcelable("location", location);
 
         ARScene arScene = new ARScene();

@@ -11,23 +11,13 @@ public class Sign implements Parcelable {
     private String imagePath;
     private Vector3 scale;
     private Animation animation;
-    private boolean enableSignText;
+    private SignText signText;
 
-    public Sign(String name, String sfbPath, String imagePath, Vector3 scale, Animation animation, boolean enableSignText) {
+    public Sign(String name, String sfbPath, String imagePath, Vector3 scale) {
         this.name = name;
         this.sfbPath = sfbPath;
         this.imagePath = imagePath;
         this.scale = scale;
-        this.animation = animation;
-        this.enableSignText = enableSignText;
-    }
-
-    public Sign(String name, String sfbPath, String imagePath, Vector3 scale, boolean enableSignText) {
-        this.name = name;
-        this.sfbPath = sfbPath;
-        this.imagePath = imagePath;
-        this.scale = scale;
-        this.enableSignText = enableSignText;
     }
 
     protected Sign(Parcel in) {
@@ -88,12 +78,12 @@ public class Sign implements Parcelable {
         this.animation = animation;
     }
 
-    public boolean isEnableSignText() {
-        return enableSignText;
+    public SignText getSignText() {
+        return signText;
     }
 
-    public void setEnableSignText(boolean enableSignText) {
-        this.enableSignText = enableSignText;
+    public void setSignText(SignText signText) {
+        this.signText = signText;
     }
 
     @Override

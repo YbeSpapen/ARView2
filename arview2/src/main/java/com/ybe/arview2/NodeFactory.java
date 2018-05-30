@@ -17,7 +17,9 @@ import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
+import com.ybe.arview2.models.Animation;
 import com.ybe.arview2.models.Sign;
+import com.ybe.arview2.models.SignText;
 
 public class NodeFactory {
 
@@ -51,75 +53,71 @@ public class NodeFactory {
             SignNode signNode = new SignNode(context, location, helper);
             signNode.setParent(parent);
             signNode.setLocalRotation(Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f), helper.getAngle()));
-            signNode.setLocalScale(new Vector3(0.40f, 0.40f, 0.40f));
+            signNode.setLocalScale(sign.getScale());
             signNode.setRenderable(renderable);
 
             if (sign.getAnimation() != null)
-                drawAnimatedObject(sign.getAnimation().getSfbPath(), sign.getAnimation().getDurationMilliseconds(), signNode);
+                drawAnimatedObject(sign.getAnimation(), signNode);
 
-            if (sign.isEnableSignText()) {
-                drawTextOnSign(signNode);
+            if (sign.getSignText() != null) {
+                drawTextOnSign(sign.getSignText(), parent);
             }
         });
     }
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void drawTextOnSign(SignNode sign) {
+    private void drawTextOnSign(SignText text, Node node) {
         ViewRenderable.builder().setView(context, R.layout.ar_sign_text).build().thenAccept(textRenderable -> {
             float angle = helper.getAngle();
+
             Node signText = new Node();
-            signText.setParent(sign);
+            signText.setParent(node);
 
-            if (angle <= 90 || angle >= 240) {
+            if (angle > 180) {
+                signText.setLocalPosition(text.getPositionReflected());
+                Quaternion q1 = Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f), 90);
+                Quaternion q2 = Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f), angle - 180);
+                signText.setLocalRotation(Quaternion.multiply(q1, q2));
 
+            } else {
+                signText.setLocalPosition(text.getPosition());
                 float tempAngle = angle - 90;
                 if (tempAngle < 0) {
                     tempAngle += 360;
                 }
-
                 signText.setLocalRotation(Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f), tempAngle));
-                signText.setLocalPosition((new Vector3(0f, 0.62f, 0.03f)));
-
-            } else {
-
-                float tempAngle = angle + 90;
-                if (tempAngle > 360) {
-                    tempAngle -= 360;
-                }
-
-                signText.setLocalRotation(Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f), tempAngle));
-                signText.setLocalPosition((new Vector3(0f, 0.62f, -0.03f)));
             }
 
-            signText.setLocalScale(new Vector3(0.5f, 0.5f, 0.5f));
+            signText.setLocalScale(text.getScale());
             signText.setRenderable(textRenderable);
             TextView textView = (TextView) textRenderable.getView();
-
-            if (helper.getDistanceToPoi() > 20) {
-                textView.setText(String.format("%s m", Math.round(helper.getDistanceToPoi())));
+            if (text.getText() != null) {
+                textView.setText(text.getText());
             } else {
-                textView.setText("Gearriveerd!");
+                textView.setText(String.format("%s m", Math.round(helper.getDistanceToPoi())));
             }
         });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void drawAnimatedObject(String animatedObjectSfb, float durationMilliseconds, SignNode sign) {
-        ModelRenderable.builder().setSource(context, Uri.parse(animatedObjectSfb)).build().thenAccept(renderable -> {
-            Node birdRotatePoint = new Node();
-            birdRotatePoint.setParent(sign);
+    private void drawAnimatedObject(Animation animation, SignNode signNode) {
+        ModelRenderable.builder().setSource(context, Uri.parse(animation.getSfbPath())).build().thenAccept(renderable -> {
+            //Animation rotation node
+            Node animationRotatePoint = new Node();
+            animationRotatePoint.setParent(signNode);
 
-            Node bird = new Node();
-            bird.setParent(birdRotatePoint);
-            bird.setLocalPosition(new Vector3(2f, 1.9f, 0.0f));
-            bird.setLocalRotation(Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f), 180));
-            bird.setLocalScale(new Vector3(0.5f, 0.5f, 0.5f));
-            bird.setRenderable(renderable);
+            //Animated object
+            Node animatedObject = new Node();
+            animatedObject.setParent(animationRotatePoint);
+            animatedObject.setLocalPosition(animation.getPosition());
+            animatedObject.setLocalScale(animation.getScale());
+            animatedObject.setRenderable(renderable);
 
+            //Animator
             ObjectAnimator orbitAnimation = createAnimator();
-            orbitAnimation.setTarget(birdRotatePoint);
-            orbitAnimation.setDuration((long) durationMilliseconds);
+            orbitAnimation.setTarget(animationRotatePoint);
+            orbitAnimation.setDuration((long) animation.getDurationMilliseconds());
             orbitAnimation.start();
         });
     }

@@ -11,12 +11,12 @@ import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
 import com.google.ar.sceneform.AnchorNode;
-import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.ux.ArFragment;
+import com.ybe.arview2.DefaultConfig;
 import com.ybe.arview2.NodeFactory;
 import com.ybe.arview2.models.Animation;
 import com.ybe.arview2.models.Sign;
-
+import com.ybe.arview2.models.SignText;
 
 public class NodeFactoryExample extends AppCompatActivity {
     private ArFragment arFragment;
@@ -24,8 +24,6 @@ public class NodeFactoryExample extends AppCompatActivity {
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
-    // CompletableFuture requires api level 24
-    // FutureReturnValueIgnored is not valid
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -34,8 +32,12 @@ public class NodeFactoryExample extends AppCompatActivity {
 
         Location location = getIntent().getParcelableExtra("location");
 
-        Animation animation = new Animation("balloon.sfb", 4000);
-        Sign sign = new Sign("Wegwijzer", "sign.sfb", "sign", new Vector3(0.40f, 0.40f, 0.40f), animation, true);
+        Animation animation = DefaultConfig.getDefaultAnimation();
+        SignText text = DefaultConfig.getDefaultText();
+        Sign sign = DefaultConfig.getDefaultSignSmall();
+
+        sign.setAnimation(animation);
+        sign.setSignText(text);
 
         factory = new NodeFactory(this, arFragment, location);
 
