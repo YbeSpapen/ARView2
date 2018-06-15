@@ -27,7 +27,7 @@ import com.ybe.arview2.models.Sign;
 import java.util.List;
 import java.util.Objects;
 
-public class ARScene extends android.support.v4.app.Fragment implements RecyclerViewClickListener {
+public class DirectionARView extends android.support.v4.app.Fragment implements RecyclerViewClickListener {
     private ArFragment arFragment;
     private NodeFactory factory;
 

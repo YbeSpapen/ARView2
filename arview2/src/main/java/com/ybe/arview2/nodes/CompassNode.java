@@ -1,15 +1,16 @@
-package com.ybe.arview2;
+package com.ybe.arview2.nodes;
 
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
+import com.ybe.arview2.MathHelper;
 
 public class CompassNode extends Node {
 
     private MathHelper helper;
 
-    CompassNode(MathHelper helper) {
+    public CompassNode(MathHelper helper) {
         this.helper = helper;
     }
 

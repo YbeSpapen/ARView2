@@ -20,6 +20,8 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.ybe.arview2.models.Animation;
 import com.ybe.arview2.models.Sign;
 import com.ybe.arview2.models.SignText;
+import com.ybe.arview2.nodes.CompassNode;
+import com.ybe.arview2.nodes.SignNode;
 
 public class NodeFactory {
 
@@ -50,9 +52,10 @@ public class NodeFactory {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void drawSign(Sign sign, Node parent) {
         ModelRenderable.builder().setSource(context, Uri.parse(sign.getSfbPath())).build().thenAccept(renderable -> {
+            float angle = helper.getAngle();
             SignNode signNode = new SignNode(context, location, helper);
             signNode.setParent(parent);
-            signNode.setLocalRotation(Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f), helper.getAngle()));
+            signNode.setLocalRotation(Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f), angle));
             signNode.setLocalScale(sign.getScale());
             signNode.setRenderable(renderable);
 
@@ -60,17 +63,15 @@ public class NodeFactory {
                 drawAnimatedObject(sign.getAnimation(), signNode);
 
             if (sign.getSignText() != null) {
-                drawTextOnSign(sign.getSignText(), parent);
+                drawTextOnSign(sign.getSignText(), parent, angle);
             }
         });
     }
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void drawTextOnSign(SignText text, Node node) {
+    private void drawTextOnSign(SignText text, Node node, float angle) {
         ViewRenderable.builder().setView(context, R.layout.ar_sign_text).build().thenAccept(textRenderable -> {
-            float angle = helper.getAngle();
-
             Node signText = new Node();
             signText.setParent(node);
 

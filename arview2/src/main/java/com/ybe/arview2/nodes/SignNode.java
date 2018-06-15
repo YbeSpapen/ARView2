@@ -1,4 +1,4 @@
-package com.ybe.arview2;
+package com.ybe.arview2.nodes;
 
 import android.content.Context;
 import android.location.Location;
@@ -11,6 +11,8 @@ import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ViewRenderable;
+import com.ybe.arview2.MathHelper;
+import com.ybe.arview2.R;
 
 public class SignNode extends Node {
     private Node infoCard;
@@ -19,7 +21,7 @@ public class SignNode extends Node {
     private MathHelper helper;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    SignNode(Context context, Location location, MathHelper helper) {
+    public SignNode(Context context, Location location, MathHelper helper) {
         this.context = context;
         this.location = location;
         this.helper = helper;

@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-import com.ybe.arview2.ARScene;
+import com.ybe.arview2.DirectionARView;
 import com.ybe.arview2.DefaultConfig;
 import com.ybe.arview2.models.Animation;
 import com.ybe.arview2.models.Sign;
 import com.ybe.arview2.models.SignText;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ARActivity extends AppCompatActivity {
 
@@ -35,7 +34,7 @@ public class ARActivity extends AppCompatActivity {
         bundle.putParcelableArrayList("signs", signs);
         bundle.putParcelable("location", location);
 
-        ARScene arScene = new ARScene();
+        DirectionARView arScene = new DirectionARView();
         arScene.setArguments(bundle);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
